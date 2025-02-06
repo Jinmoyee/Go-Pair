@@ -40,41 +40,34 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     // If user doesn't exist
-    if (!user)
-      return res.status(400).json({
-        message: "Invalid Credentials",
-      });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
 
     // Compare provided password with stored password
     const matchPassword = await bcrypt.compare(password, user.password);
 
     // If passwords do not match
-    if (!matchPassword)
-      return res.status(400).json({
-        message: "Invalid Credentials",
-      });
+    if (!matchPassword) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
 
     // Create JWT token
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SEC, {
       expiresIn: "15d", // 15 days
     });
 
-    // Store token in HTTP-only cookie
-    res.cookie("token", token, {
-      httpOnly: true, // Prevents JavaScript access to the token
-    });
-
-    // Send a success message
+    // Send token in the response
     res.json({
       message: `Welcome back ${user.name}`,
+      token, // Client should store this in localStorage
       user, // Send user details back (except password)
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 export const myProfile = async (req, res) => {
   try {

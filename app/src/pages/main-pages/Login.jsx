@@ -31,7 +31,7 @@ export default function Login() {
                 // Optionally, store the token if needed
                 localStorage.setItem('token', data.token); // or handle cookies on the backend
                 // Redirect to the dashboard or home page
-                navigate('/dashboard');
+                navigate('/');
             } else {
                 // Show error message if login fails
                 setError(data.message);
