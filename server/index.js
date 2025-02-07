@@ -16,6 +16,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 import userRoutes from "./routes/user.js";
+import passengerRoutes from "./routes/passenger.js";
+import pilotRoutes from "./routes/pilot.js"
 
 const port = process.env.PORT;
 
@@ -24,6 +26,8 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api", userRoutes);
+app.use("/api", passengerRoutes);
+app.use("/api", pilotRoutes);
 
 
 app.listen(port, () => {

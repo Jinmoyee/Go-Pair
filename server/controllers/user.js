@@ -69,10 +69,10 @@ export const loginUser = async (req, res) => {
 };
 
 
-export const myProfile = async (req, res) => {
-  try {
-    res.json({ user: req.user });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// export const myProfile = async (req, res) => {
+//   try {
+//     res.json({ user: req.user });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };

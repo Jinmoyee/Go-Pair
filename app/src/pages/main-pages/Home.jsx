@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export default function Home() {
     const navigate = useNavigate();
+    const [identity, setIdentity] = useState(null);
 
-    const getToken = () => {
-        const token = localStorage.getItem('token');
-        return token && token !== 'undefined' ? token : null;
+    // Load identity from cookies once when the component mounts
+    useEffect(() => {
+        const storedIdentity = Cookies.get('identity');
+        setIdentity(storedIdentity);
+        console.log("Identity from useEffect:", storedIdentity); // Debugging output
+    }, []);
+
+    const handlePilotClick = () => {
+        if (identity === 'pilot') {
+            navigate('/pilot');
+        } else {
+            navigate('/pilot-login');
+        }
     };
 
-    const handleNavigation = (userType) => {
-        const token = getToken();
-        if (token) {
-            navigate(userType === 'pilot' ? '/Pilot' : '/Passenger');
+    const handlePassengerClick = () => {
+        console.log("Identity at Click:", identity); // Debugging output
+        if (identity === 'passenger') {
+            navigate('/passenger');
         } else {
-            navigate('/Login');
+            navigate('/passenger-login');
         }
     };
 
@@ -28,7 +40,7 @@ export default function Home() {
                     onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                     onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
                     onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                    onClick={() => handleNavigation('pilot')}
+                    onClick={handlePilotClick}
                 >
                     PILOT
                 </button>
@@ -41,7 +53,7 @@ export default function Home() {
                     onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                     onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
                     onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                    onClick={() => handleNavigation('passenger')}
+                    onClick={handlePassengerClick}
                 >
                     PASSENGER
                 </button>
