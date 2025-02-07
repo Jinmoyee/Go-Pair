@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify'; // If you're using toast for notifications
 
 export default function Register() {
@@ -66,7 +66,7 @@ export default function Register() {
 
     return (
         <div className="flex justify-center items-center h-screen bg-black font-inter">
-            <div className="bg-black p-10 rounded-lg border border-white shadow-lg w-full max-w-md text-center">
+            <div className="bg-black p-10 border border-white shadow-lg w-full max-w-md text-center">
                 <h2 className="text-2xl font-medium text-white mb-6">Register</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <input
@@ -74,7 +74,7 @@ export default function Register() {
                         name="name"
                         value={formData.name}
                         placeholder="Username"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         onChange={handleChange}
                         required
                     />
@@ -83,7 +83,7 @@ export default function Register() {
                         name="email"
                         value={formData.email}
                         placeholder="Email"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         onChange={handleChange}
                         required
                     />
@@ -92,7 +92,7 @@ export default function Register() {
                         name="password"
                         value={formData.password}
                         placeholder="Password"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         onChange={handleChange}
                         required
                     />
@@ -101,18 +101,21 @@ export default function Register() {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         placeholder="Confirm Password"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         onChange={handleChange}
                         required
                     />
                     {/* Error message (example) */}
                     <button
                         type="submit"
-                        className="w-full px-4 py-3 bg-white text-black font-medium rounded-md border border-black hover:bg-green-900 hover:text-white transition-colors duration-300"
+                        className="w-full px-4 py-3 bg-white text-black font-medium border border-black hover:bg-green-900 hover:text-white transition-colors duration-300"
                         disabled={loading}
                     >
                         {loading ? 'Registering...' : 'Register'}
                     </button>
+                    <Link to="/login">
+                        <p className='text-white text-left'>Already have an account? <span className='text-green-600'>Login</span></p>
+                    </Link>
                 </form>
             </div>
         </div>

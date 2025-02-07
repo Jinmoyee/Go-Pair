@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // for navigation after successful login
+import { useNavigate, Link } from 'react-router-dom'; // for navigation after successful login
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -44,14 +44,14 @@ export default function Login() {
 
     return (
         <div className="flex justify-center items-center h-screen bg-black font-inter">
-            <div className="bg-black p-10 rounded-lg border border-white shadow-lg w-full max-w-md text-center">
+            <div className="bg-black p-10 border border-white shadow-lg w-full max-w-md text-center">
                 <h2 className="text-2xl font-medium text-white mb-6">Login</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <input
                         type="text"
                         name="username"
                         placeholder="Email"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
@@ -60,7 +60,7 @@ export default function Login() {
                         type="password"
                         name="password"
                         placeholder="Password"
-                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 rounded-md focus:outline-none focus:border-gray-400"
+                        className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -68,10 +68,13 @@ export default function Login() {
                     {error && <div className="text-red-500 text-sm">{error}</div>}
                     <button
                         type="submit"
-                        className="w-full px-4 py-3 bg-white text-black font-medium rounded-md border border-black hover:bg-green-900 hover:text-white transition-colors duration-300"
+                        className="w-full px-4 py-3 bg-white text-black font-medium border border-black hover:bg-green-900 hover:text-white transition-colors duration-300"
                     >
                         Login
                     </button>
+                    <Link to="/register">
+                        <p className='text-white text-left'>Don't have an account? <span className='text-green-600'>Register</span></p>
+                    </Link>
                 </form>
             </div>
         </div>
