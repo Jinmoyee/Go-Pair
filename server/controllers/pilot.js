@@ -70,3 +70,11 @@ export const loginPilot = async (req, res) => {
     }
 };
 
+export const getAll = async (req, res) => {
+    try {
+        const pilot = await Pilot.find().select("-password"); // Exclude passwords for security
+        res.json(pilot);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -31,6 +31,7 @@ export default function Passenger() {
     const [coordinates, setCoordinates] = useState([]);
     const [duration, setDuration] = useState(null);
     const [error, setError] = useState(null);
+    const [locationSuggestions, setLocationSuggestions] = useState([]);
 
     const getCoordinates = async (location) => {
         try {
@@ -94,6 +95,33 @@ export default function Passenger() {
         setCoordinates([]);
         setDuration(null);
         setError(null);
+        setLocationSuggestions([]); // Clear suggestions on cancel
+    };
+
+    const handleLocationChange = async (e, type) => {
+        const value = e.target.value;
+        if (type === "currentLocation") setCurrentLocation(value);
+        if (type === "goalLocation") setGoalLocation(value);
+
+        if (value.length > 2) {
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}`
+                );
+                const data = await response.json();
+                setLocationSuggestions(data); // Store suggestions
+            } catch (error) {
+                console.error("Error fetching location suggestions:", error);
+            }
+        } else {
+            setLocationSuggestions([]); // Clear suggestions if input is too short
+        }
+    };
+
+    const handleSelectLocation = (location, type) => {
+        if (type === "currentLocation") setCurrentLocation(location);
+        if (type === "goalLocation") setGoalLocation(location);
+        setLocationSuggestions([]); // Clear suggestions after selection
     };
 
     const sliderSettings = {
@@ -110,8 +138,48 @@ export default function Passenger() {
                 <div className="flex flex-col bg-black p-6 border border-white shadow-lg w-full lg:w-1/2 text-center">
                     <h2 className="text-2xl font-medium text-white mb-6">Find a Vehicle</h2>
                     <div className="space-y-4">
-                        <input type="text" placeholder="Current Location" className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} required />
-                        <input type="text" placeholder="Goal Location" className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400" value={goalLocation} onChange={(e) => setGoalLocation(e.target.value)} required />
+                        <input
+                            type="text"
+                            placeholder="Current Location"
+                            className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
+                            value={currentLocation}
+                            onChange={(e) => handleLocationChange(e, "currentLocation")}
+                            required
+                        />
+                        {locationSuggestions.length > 0 && (
+                            <ul className="bg-white text-black max-h-32 overflow-y-scroll border border-gray-600 rounded-md mt-2">
+                                {locationSuggestions.map((location, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={() => handleSelectLocation(location.display_name, "currentLocation")}
+                                        className="px-4 py-2 hover:bg-gray-300 cursor-pointer"
+                                    >
+                                        {location.display_name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                        <input
+                            type="text"
+                            placeholder="Goal Location"
+                            className="w-full px-4 py-3 bg-black border border-white text-white placeholder-gray-500 focus:outline-none focus:border-gray-400"
+                            value={goalLocation}
+                            onChange={(e) => handleLocationChange(e, "goalLocation")}
+                            required
+                        />
+                        {locationSuggestions.length > 0 && (
+                            <ul className="bg-white text-black max-h-32 overflow-y-scroll border border-gray-600 rounded-md mt-2">
+                                {locationSuggestions.map((location, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={() => handleSelectLocation(location.display_name, "goalLocation")}
+                                        className="px-4 py-2 hover:bg-gray-300 cursor-pointer"
+                                    >
+                                        {location.display_name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         {error && <div className="text-red-500 text-sm">{error}</div>}
                         {duration && <div className="text-green-500 text-sm">Estimated Time: {duration}</div>}
                         <button onClick={handleFindVehicles} className="w-full px-4 py-3 bg-white text-black font-medium border border-black hover:bg-green-900 hover:text-white transition-colors duration-300">Find Vehicles</button>

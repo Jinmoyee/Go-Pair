@@ -1,43 +1,40 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // for navigation after successful login
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function PilotLogin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null); // To handle error messages
-    const navigate = useNavigate(); // For navigation after successful login
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent form submission and page reload
+        e.preventDefault();
 
         try {
-            // Send the login data to the backend using fetch
+            if (username === 'admin@gmail.com' && password === 'admin123') {
+                localStorage.setItem('adminKey', 'admin');
+                navigate('/admin-panel');
+                return;
+            }
+
             const response = await fetch(`http://localhost:5000/api/pilot/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    email: username,  // Assuming username is the email field
-                    password: password,
-                }),
-                credentials: 'include', // Include cookies in the request
+                body: JSON.stringify({ email: username, password: password }),
+                credentials: 'include',
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Successfully logged in
-                // Optionally, store the token if needed
-                localStorage.setItem('token', data.token); // or handle cookies on the backend
-                // Redirect to the dashboard or home page
+                localStorage.setItem('token', data.token);
                 navigate('/');
             } else {
-                // Show error message if login fails
                 setError(data.message);
             }
         } catch (error) {
-            // Handle network or server errors
             setError('An error occurred while logging in.');
         }
     };

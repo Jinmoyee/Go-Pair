@@ -65,3 +65,13 @@ export const loginPassenger = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getAll = async (req, res) => {
+    try {
+        const passengers = await Passenger.find().select("-password"); // Exclude passwords for security
+        res.json(passengers);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
